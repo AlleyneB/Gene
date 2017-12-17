@@ -1,25 +1,41 @@
 package com.AlleyneB.Gene.system;
 
-import java.util.Scanner;
+import java.io.File;
 
 public class GeneSeekController {
 
-	public static void main(String[] args) {
-		GeneSeekView view=new GeneSeekView();
-		GeneSeekModel model=new GeneSeekModel(view);
-		while(true) {
-			model.checkCMD(getCMD());
-		}
-		
+	
+	private GeneSeekView view;
+	private GeneSeekModel model;
+//controller init	
+	void init() {
 
-
-
+		view=new GeneSeekView(this);
+		model=new GeneSeekModel(this);		
+	}
+//display	
+	void display(String string) {
+		view.show(string);
 	}
 	
-	 //获取用户输入，并解析为字符串数组
-	static String[] getCMD() {
-		Scanner sc=new Scanner(System.in);
-		return sc.nextLine().split(" +");//正则表达式匹配1或多个空格
+//setSeqs	
+	 void setSeqs(String seqsFilePath, String[] heads) {
+		model.setSeqsMap(seqsFilePath, heads);	
+	}
+//setCodes
+	void setCodes(String codesFilePath) {
+		model.setCodesMap(codesFilePath);
+		
+	}
+//seekGene
+	void seekGene(String geneFilePath) {
+		model.seekGene(geneFilePath);
+		
+	}
+//display result	
+	void displayResult(File geneFile, String seqNums, String codeNum) {
+		view.showResult(geneFile, seqNums, codeNum);
+		
 	}
 
 }
