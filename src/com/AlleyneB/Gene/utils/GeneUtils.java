@@ -99,7 +99,7 @@ public class GeneUtils {
 		}
 		result=geneCodeSb.toString();
 		if((result==null)||result.length()<=0) {
-			return null;
+			return "未匹配到";
 		}
 		else {
 			return result.substring(0, result.length()-1);
@@ -114,7 +114,7 @@ public class GeneUtils {
 				tCodeSb.append(k);
 			}
 		});
-		if(tCodeSb.length()<=0)return null;
+		if(tCodeSb.length()<=0)return "未匹配到";
 		else return tCodeSb.toString();
 	}
 }

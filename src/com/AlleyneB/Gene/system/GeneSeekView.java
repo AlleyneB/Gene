@@ -1,37 +1,109 @@
 package com.AlleyneB.Gene.system;
 
+import java.awt.BorderLayout;
+import java.awt.Button;
+import java.awt.FileDialog;
+import java.awt.Frame;
+import java.awt.GridLayout;
+import java.awt.Panel;
+import java.awt.TextArea;
+import java.awt.TextField;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
-import java.util.Scanner;
 
 import com.AlleyneB.Gene.utils.GeneUtils;
 
 public class GeneSeekView {
 	
-	public GeneSeekView() {
-		this.start();
+	//窗口
+	Frame frame=new Frame("基因检测程序");
+	
+
+	Panel panel=new Panel();
+	
+	Button chooseSeqsFile=new Button("选择序列文件");
+	TextField seqsFile=new TextField(40);
+	
+	Button chooseCodesFile=new Button("选择编码文件");
+	TextField codesFile=new TextField(40);
+	
+	Button chooseGeneFile=new Button("选择基因文件");
+	TextField geneFile=new TextField(40);
+	
+	TextField heads=new TextField("GAG,AAA,AAT");
+
+	TextArea display =new TextArea(5,20);
+	
+	GeneSeekController controller;
+	public GeneSeekView(GeneSeekController controller) {
+		this.controller=controller;
+		this.init();
 	}
 	
-	void start() {
-		System.out.println("欢迎使用基因匹配程序!__如需帮助请输入help");
+	public void init() {
+		
+		//选择序列文件
+		panel.add(chooseSeqsFile);
+		FileDialog seqsFileDialog=new FileDialog(frame, "请选择序列文件", FileDialog.LOAD);
+		chooseSeqsFile.addActionListener(e->{
+			seqsFileDialog.setVisible(true);
+			seqsFile.setText(seqsFileDialog.getFile());
+			//controller.display(seqsFileDialog.getDirectory()+seqsFileDialog.getFile());
+			controller.setSeqs(seqsFileDialog.getDirectory()+seqsFileDialog.getFile(),heads.getText().split(","));
+		});
+		panel.add(seqsFile);
+		
+		//选择编码文件
+		panel.add(chooseCodesFile);
+		FileDialog codesFileDialog=new FileDialog(frame, "请选择编码文件", FileDialog.LOAD);
+		chooseCodesFile.addActionListener(e->{
+			codesFileDialog.setVisible(true);
+			codesFile.setText(codesFileDialog.getFile());
+			controller.setCodes(codesFileDialog.getDirectory()+codesFileDialog.getFile());
+		});
+		panel.add(codesFile);
+		
+		//选择基因文件
+		panel.add(chooseGeneFile);
+		FileDialog geneFileDialog=new FileDialog(frame, "请选择基因文件", FileDialog.LOAD);
+		chooseGeneFile.addActionListener(e->{
+			geneFileDialog.setVisible(true);
+			geneFile.setText(geneFileDialog.getFile());
+			controller.seekGene(geneFileDialog.getDirectory()+geneFileDialog.getFile()); 
+		});
+		panel.add(geneFile);
+		
+		panel.add(heads);
+
+		
+		
+		panel.setLayout(new GridLayout(4, 2));
+		
+		frame.add(panel);
+		frame.add(display,BorderLayout.SOUTH);
+		
+		frame.setBounds(300, 300, 150, 220);
+		frame.pack();		
+		frame.setVisible(true);
+		frame.addWindowListener(new WindowAdapter(){
+			public void windowClosing(WindowEvent e) {
+				System.exit(0);
+			}
+		});
 	}
+
 	
 	void help() {
-		System.out.println("setseqs   +序列文件路径+要匹配的序列开头字符（以空格键分隔）————设置匹配序列");
-		System.out.println("setcodes  +编码文件路径————设置编码表");
-		System.out.println("seek      +基因文件路径————匹配基因并显示结果");
 	}
 
-	public void show(String string) {
-		System.out.println(string);
-		
+	void show(String string) {
+		display.setText(string);		
 	}
 
-	public void showResult(File geneFile, String seqNums,String codeNum) {
-		System.out.println(geneFile.getName());
-		System.out.println("---R匹配结果---"+"\r\n"+seqNums);
-		System.out.println("---T匹配结果---"+"\r\n"+codeNum);
-		
+	void showResult(File geneFile, String seqNums,String codeNum) {
+		display.setText(geneFile.getName()+"\r\n"+"---R匹配结果---"+"\r\n"+seqNums+"\r\n"+"---T匹配结果---"+"\r\n"+codeNum);	
 	}
-	
+		
 
 }
